@@ -31,45 +31,34 @@ foreach ($referenceImagePaths as $path) {
 }
 
 // Create the request to OpenAI API
-$client = new Client();
-$response = $client->post('https://api.openai.com/v1/chat/completions', [
-    'headers' => [
-        'Authorization' => 'Bearer ' . $apiKey,
-        'Content-Type' => 'application/json',
-    ],
-    'json' => [
-        'model' => 'gpt-4',
-        'messages' => [
-            ['role' => 'system', 'content' => 'You are a helpful assistant.'],
-            ['role' => 'user', 'content' => 'These images are taken by people at a specific location using their mobile phone. The first two images are reference images. Your task is to screen the third image to make sure that it does not have any people in the foreground (so no selfies) and that the composition of the third image is the same as the reference images. Please answer with a score of likelihood from 0 to 100 and provide an explanation for your score. Return the response in JSON format with \'score\' and \'explanation\' as keys.'],
-            ['role' => 'user', 'content' => 'data:image/png;base64,' . $referenceImagesBase64[0]],
-            ['role' => 'user', 'content' => 'data:image/png;base64,' . $referenceImagesBase64[1]],
-            ['role' => 'user', 'content' => 'data:image/png;base64,' . $userImageBase64],
-        ],
-        'max_tokens' => 300,
-    ],
+$ch = curl_init('https://api.openai.com/v1/chat/completions');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Authorization: Bearer ' . $apiKey
 ]);
 
-if ($response->getStatusCode() === 200) {
-    $result = json_decode($response->getBody(), true);
-    $choice = $result['choices'][0]['message']['content'] ?? null;
+$data = [
+    'model' => 'text-davinci-003',
+    'messages' => [
+        ['role' => 'system', 'content' => 'You are a helpful assistant.'],
+        ['role' => 'user', 'content' => 'Analyze these images.'],
+        ['role' => 'user', 'content' => $userImageBase64],
+        ['role' => 'user', 'content' => implode(',', $referenceImagesBase64)]
+    ]
+];
 
-    if ($choice) {
-        $content = trim($choice);
-        $jsonStart = strpos($content, '{');
-        $jsonEnd = strrpos($content, '}') + 1;
-        $jsonContent = substr($content, $jsonStart, $jsonEnd - $jsonStart);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
-        $result = json_decode($jsonContent, true);
-        $score = $result['score'] ?? null;
-        $explanation = $result['explanation'] ?? null;
-
-        echo json_encode(['score' => $score, 'text' => $explanation]);
-    } else {
-        error_log('Unexpected response structure: message or content not found');
-        echo json_encode(['score' => null, 'text' => 'Error: Unexpected response structure']);
-    }
-} else {
-    error_log('Error calling OpenAI API: ' . $response->getBody());
-    echo json_encode(['score' => null, 'text' => 'Error: Failed to call OpenAI API']);
+$response = curl_exec($ch);
+if (curl_errno($ch)) {
+    echo json_encode(['error' => curl_error($ch)]);
+    http_response_code(500);
+    exit;
 }
+
+curl_close($ch);
+
+echo $response;
+?>
