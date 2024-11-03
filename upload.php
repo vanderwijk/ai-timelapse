@@ -74,7 +74,7 @@ $referenceImagePaths = [
 // Convert reference images to base64
 $referenceImagesBase64 = [];
 foreach ($referenceImagePaths as $path) {
-    $resizedReferenceImage = resizeImage($path, 800, 800); // Adjust max width and height as needed
+    $resizedReferenceImage = resizeImage($path, 400, 400); // Adjust max width and height as needed
     $referenceImagesBase64[] = base64_encode(file_get_contents($resizedReferenceImage));
 }
 
