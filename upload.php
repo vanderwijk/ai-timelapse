@@ -67,7 +67,8 @@ $userImageBase64 = base64_encode(file_get_contents($resizedUserImage));
 
 // Paths to the reference images
 $referenceImagePaths = [
-    'images/6714fd433c8e5.png'
+    'images/6714fd433c8e5.png',
+    'images/60ba23cb24a44.png'
 ];
 
 // Convert reference images to base64
