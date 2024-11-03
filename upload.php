@@ -40,7 +40,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 ]);
 
 $data = [
-    'model' => 'gpt-3.5-turbo',
+    'model' => 'gpt-4o-mini',
     'messages' => [
         ['role' => 'system', 'content' => 'You are a helpful assistant.'],
         ['role' => 'user', 'content' => 'Analyze these images.'],
