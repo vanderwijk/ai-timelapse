@@ -15,8 +15,39 @@ if ($file['error'] !== UPLOAD_ERR_OK) {
     exit;
 }
 
-// Convert user image to base64
-$userImageBase64 = base64_encode(file_get_contents($file['tmp_name']));
+// Function to resize image
+function resizeImage($file, $max_width, $max_height) {
+    list($orig_width, $orig_height) = getimagesize($file);
+    $width = $orig_width;
+    $height = $orig_height;
+
+    // Calculate new dimensions
+    if ($width > $max_width || $height > $max_height) {
+        $ratio = $width / $height;
+        if ($max_width / $max_height > $ratio) {
+            $max_width = $max_height * $ratio;
+        } else {
+            $max_height = $max_width / $ratio;
+        }
+        $width = $max_width;
+        $height = $max_height;
+    }
+
+    // Resample the image
+    $image_p = imagecreatetruecolor($width, $height);
+    $image = imagecreatefromjpeg($file);
+    imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $orig_width, $orig_height);
+
+    // Save the resized image to a temporary file
+    $temp_file = tempnam(sys_get_temp_dir(), 'resized_');
+    imagejpeg($image_p, $temp_file, 75); // Adjust quality as needed
+
+    return $temp_file;
+}
+
+// Resize user image
+$resizedUserImage = resizeImage($file['tmp_name'], 800, 800); // Adjust max width and height as needed
+$userImageBase64 = base64_encode(file_get_contents($resizedUserImage));
 
 // Paths to the reference images
 $referenceImagePaths = [
@@ -27,7 +58,8 @@ $referenceImagePaths = [
 // Convert reference images to base64
 $referenceImagesBase64 = [];
 foreach ($referenceImagePaths as $path) {
-    $referenceImagesBase64[] = base64_encode(file_get_contents($path));
+    $resizedReferenceImage = resizeImage($path, 800, 800); // Adjust max width and height as needed
+    $referenceImagesBase64[] = base64_encode(file_get_contents($resizedReferenceImage));
 }
 
 $responses = [];
