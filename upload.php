@@ -78,40 +78,37 @@ foreach ($referenceImagePaths as $path) {
     $referenceImagesBase64[] = base64_encode(file_get_contents($resizedReferenceImage));
 }
 
-$responses = [];
-foreach ($referenceImagesBase64 as $referenceImageBase64) {
-    // Create the request to OpenAI API
-    $ch = curl_init('https://api.openai.com/v1/chat/completions');
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/json',
-        'Authorization: Bearer ' . $apiKey
-    ]);
+// Combine reference images into one string
+$combinedReferenceImagesBase64 = implode(',', $referenceImagesBase64);
 
-    $data = [
-        'model' => 'gpt-4o-mini',
-        'messages' => [
-            ['role' => 'system', 'content' => 'You are a helpful assistant.'],
-            ['role' => 'user', 'content' => 'These images are taken by people at a specific location using their mobile phone. The first two images are reference images. Your task is to screen the third image to make sure that it does not have any people in the foreground (so no selfies) and that the composition of the third image is the same as the reference images. Please answer with a score of likelihood from 0 to 100 and provide an explanation for your score. Return the response in JSON format with \'score\' and \'explanation\' as keys.'],
-            ['role' => 'user', 'content' => $userImageBase64],
-            ['role' => 'user', 'content' => $referenceImageBase64]
-        ],
-        'max_tokens' => 100 // Adjust this value as needed to limit the output length
-    ];
+// Create the request to OpenAI API
+$ch = curl_init('https://api.openai.com/v1/chat/completions');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Authorization: Bearer ' . $apiKey
+]);
 
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+$data = [
+    'model' => 'gpt-4o-mini',
+    'messages' => [
+        ['role' => 'system', 'content' => 'You are a helpful assistant.'],
+        ['role' => 'user', 'content' => 'These images are taken by people at a specific location using their mobile phone. The first two images are reference images. Your task is to screen the third image to make sure that it does not have any people in the foreground (so no selfies) and that the composition of the third image is the same as the reference images. Please answer with a score of likelihood from 0 to 100 and provide an explanation for your score. Return the response in JSON format with \'score\' and \'explanation\' as keys.'],
+        ['role' => 'user', 'content' => $combinedReferenceImagesBase64],
+        ['role' => 'user', 'content' => $userImageBase64]
+    ],
+    'max_tokens' => 100 // Adjust this value as needed to limit the output length
+];
 
-    $response = curl_exec($ch);
-    if (curl_errno($ch)) {
-        echo json_encode(['error' => curl_error($ch)]);
-        http_response_code(500);
-        exit;
-    }
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
-    $responses[] = $response;
-    curl_close($ch);
+$response = curl_exec($ch);
+if (curl_errno($ch)) {
+    echo json_encode(['error' => curl_error($ch)]);
+    http_response_code(500);
+    exit;
 }
 
-echo json_encode($responses);
+echo $response;
 ?>
