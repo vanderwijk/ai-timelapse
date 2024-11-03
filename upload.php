@@ -89,7 +89,7 @@ foreach ($referenceImagesBase64 as $referenceImageBase64) {
     ]);
 
     $data = [
-        'model' => 'gpt-4',
+        'model' => 'gpt-4o-mini',
         'messages' => [
             ['role' => 'system', 'content' => 'You are a helpful assistant.'],
             ['role' => 'user', 'content' => 'These images are taken by people at a specific location using their mobile phone. The first two images are reference images. Your task is to screen the third image to make sure that it does not have any people in the foreground (so no selfies) and that the composition of the third image is the same as the reference images. Please answer with a score of likelihood from 0 to 100 and provide an explanation for your score. Return the response in JSON format with \'score\' and \'explanation\' as keys.'],
