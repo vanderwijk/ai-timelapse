@@ -1,11 +1,4 @@
 <?php
-require 'vendor/autoload.php';
-
-use Dotenv\Dotenv;
-use GuzzleHttp\Client;
-
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 
 $apiKey = $_ENV['OPENAI_API_KEY'];
 
