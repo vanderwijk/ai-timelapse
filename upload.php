@@ -48,7 +48,8 @@ foreach ($referenceImagesBase64 as $referenceImageBase64) {
             ['role' => 'user', 'content' => 'Analyze these images.'],
             ['role' => 'user', 'content' => $userImageBase64],
             ['role' => 'user', 'content' => $referenceImageBase64]
-        ]
+        ],
+        'max_tokens' => 100 // Adjust this value as needed to limit the output length
     ];
 
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
