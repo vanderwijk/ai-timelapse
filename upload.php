@@ -17,7 +17,7 @@ if ($file['error'] !== UPLOAD_ERR_OK) {
 
 // Function to resize image
 function resizeImage($file, $max_width, $max_height) {
-    list($orig_width, $orig_height) = getimagesize($file);
+    list($orig_width, $orig_height, $image_type) = getimagesize($file);
     $width = $orig_width;
     $height = $orig_height;
 
@@ -35,12 +35,28 @@ function resizeImage($file, $max_width, $max_height) {
 
     // Resample the image
     $image_p = imagecreatetruecolor($width, $height);
-    $image = imagecreatefromjpeg($file);
+    switch ($image_type) {
+        case IMAGETYPE_JPEG:
+            $image = imagecreatefromjpeg($file);
+            break;
+        case IMAGETYPE_PNG:
+            $image = imagecreatefrompng($file);
+            break;
+        default:
+            throw new Exception('Unsupported image type');
+    }
     imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $orig_width, $orig_height);
 
     // Save the resized image to a temporary file
     $temp_file = tempnam(sys_get_temp_dir(), 'resized_');
-    imagejpeg($image_p, $temp_file, 75); // Adjust quality as needed
+    switch ($image_type) {
+        case IMAGETYPE_JPEG:
+            imagejpeg($image_p, $temp_file, 75); // Adjust quality as needed
+            break;
+        case IMAGETYPE_PNG:
+            imagepng($image_p, $temp_file);
+            break;
+    }
 
     return $temp_file;
 }
