@@ -96,7 +96,8 @@ $data = [
 		['role' => 'system', 'content' => 'You are a helpful assistant, and you only reply with JSON.'],
 		['role' => 'user', 'content' => 'These images are taken by people at a specific location using their mobile phone. The first two images are reference images. Your task is to screen the third image to make sure that it does not have any people in the foreground (so no selfies) and that the composition of the third image is the same as the reference images. Please answer with a score of likelihood from 0 to 100 and provide an explanation for your score. Return the response in JSON format with \'score\' and \'explanation\' as keys.'],
 		['role' => 'user', 'content' => $combinedReferenceImagesBase64],
-		['role' => 'user', 'content' => $userImageBase64]
+		// use type to add image url to the message
+		['role' => 'user', 'content' => 'data:image/png;base64,' . $userImageBase64, 'type' => 'image']
 	],
 	'response_format' => [
 		"type" => 'json_object',
