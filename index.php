@@ -26,7 +26,8 @@
 
             const result = await response.json();
             const messageContent = result.choices[0].message.content;
-            const parsedContent = JSON.parse(messageContent);
+            const jsonString = messageContent.match(/```json\n([\s\S]*?)\n```/)[1];
+            const parsedContent = JSON.parse(jsonString);
 
             alert('Score: ' + parsedContent.score + '\nExplanation: ' + parsedContent.explanation);
         });
