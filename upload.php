@@ -30,35 +30,39 @@ foreach ($referenceImagePaths as $path) {
     $referenceImagesBase64[] = base64_encode(file_get_contents($path));
 }
 
-// Create the request to OpenAI API
-$ch = curl_init('https://api.openai.com/v1/chat/completions');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Content-Type: application/json',
-    'Authorization: Bearer ' . $apiKey
-]);
+$responses = [];
+foreach ($referenceImagesBase64 as $referenceImageBase64) {
+    // Create the request to OpenAI API
+    $ch = curl_init('https://api.openai.com/v1/chat/completions');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Authorization: Bearer ' . $apiKey
+    ]);
 
-$data = [
-    'model' => 'gpt-4o-mini',
-    'messages' => [
-        ['role' => 'system', 'content' => 'You are a helpful assistant.'],
-        ['role' => 'user', 'content' => 'Analyze these images.'],
-        ['role' => 'user', 'content' => $userImageBase64],
-        ['role' => 'user', 'content' => implode(',', $referenceImagesBase64)]
-    ]
-];
+    $data = [
+        'model' => 'gpt-4o-mini',
+        'messages' => [
+            ['role' => 'system', 'content' => 'You are a helpful assistant.'],
+            ['role' => 'user', 'content' => 'Analyze these images.'],
+            ['role' => 'user', 'content' => $userImageBase64],
+            ['role' => 'user', 'content' => $referenceImageBase64]
+        ]
+    ];
 
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
-$response = curl_exec($ch);
-if (curl_errno($ch)) {
-    echo json_encode(['error' => curl_error($ch)]);
-    http_response_code(500);
-    exit;
+    $response = curl_exec($ch);
+    if (curl_errno($ch)) {
+        echo json_encode(['error' => curl_error($ch)]);
+        http_response_code(500);
+        exit;
+    }
+
+    $responses[] = $response;
+    curl_close($ch);
 }
 
-curl_close($ch);
-
-echo $response;
+echo json_encode($responses);
 ?>
