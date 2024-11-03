@@ -40,7 +40,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 ]);
 
 $data = [
-    'model' => 'text-davinci-003',
+    'model' => 'gpt-3.5-turbo',
     'messages' => [
         ['role' => 'system', 'content' => 'You are a helpful assistant.'],
         ['role' => 'user', 'content' => 'Analyze these images.'],
