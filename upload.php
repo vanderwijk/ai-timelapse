@@ -90,7 +90,7 @@ foreach ($referenceImagesBase64 as $referenceImageBase64) {
     ]);
 
     $data = [
-        'model' => 'gpt-4o-mini',
+        'model' => 'gpt-4',
         'messages' => [
             ['role' => 'system', 'content' => 'You are a helpful assistant.'],
             ['role' => 'user', 'content' => 'Analyze these images.'],
