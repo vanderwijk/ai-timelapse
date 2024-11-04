@@ -8,13 +8,6 @@ if (!isset($_FILES['photo'])) {
 	exit;
 }
 
-$file = $_FILES['photo'];
-if ($file['error'] !== UPLOAD_ERR_OK) {
-	echo json_encode(['error' => 'No selected file']);
-	http_response_code(400);
-	exit;
-}
-
 // Check if the file was uploaded without errors
 if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
     $fileTmpPath = $_FILES['photo']['tmp_name'];
@@ -31,7 +24,13 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
     $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg');
     if (in_array($fileExtension, $allowedfileExtensions)) {
         // Directory in which the uploaded file will be moved
-        $uploadFileDir = './uploaded_files/';
+        $uploadFileDir = sys_get_temp_dir() . '/';
+        
+        // Ensure the directory exists
+        if (!is_dir($uploadFileDir)) {
+            mkdir($uploadFileDir, 0755, true);
+        }
+
         $dest_path = $uploadFileDir . $newFileName;
 
         if (move_uploaded_file($fileTmpPath, $dest_path)) {
@@ -44,6 +43,13 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
     }
 } else {
     echo 'There was some error uploading the file. Error code: ' . $_FILES['photo']['error'];
+}
+
+$file = $_FILES['photo'];
+if ($file['error'] !== UPLOAD_ERR_OK) {
+	echo json_encode(['error' => 'No selected file']);
+	http_response_code(400);
+	exit;
 }
 
 // Function to resize image
@@ -73,6 +79,9 @@ function resizeImage($file, $max_width, $max_height) {
 		case IMAGETYPE_PNG:
 			$image = imagecreatefrompng($file);
 			break;
+		case IMAGETYPE_GIF:
+			$image = imagecreatefromgif($file);
+			break;
 		default:
 			throw new Exception('Unsupported image type');
 	}
@@ -86,6 +95,9 @@ function resizeImage($file, $max_width, $max_height) {
 			break;
 		case IMAGETYPE_PNG:
 			imagepng($image_p, $temp_file);
+			break;
+		case IMAGETYPE_GIF:
+			imagegif($image_p, $temp_file);
 			break;
 	}
 
