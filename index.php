@@ -33,6 +33,9 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             text-align: center;
+            display: flex;
+ 
+    align-items: center;
         }
         input[type="file"] {
             display: none;
