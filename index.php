@@ -33,7 +33,8 @@
 
     <div class="images">
         <div id="userImage"></div>
-        <div id="referenceImages"></div>
+        <div id="referenceImage1"></div>
+        <div id="referenceImage2"></div>
     </div>
 
     <script>
@@ -66,10 +67,10 @@
                 document.getElementById('userImage').appendChild(userImage);
 
                 // Display reference_images
-                result.images.reference_images.forEach(imageData => {
+                result.images.reference_images.forEach((imageData, index) => {
                     const referenceImage = document.createElement('img');
                     referenceImage.src = imageData;
-                    document.getElementById('referenceImages').appendChild(referenceImage);
+                    document.getElementById(`referenceImage${index + 1}`).appendChild(referenceImage);
                 });
             } catch (error) {
                 console.error('Error:', error);
