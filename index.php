@@ -10,9 +10,13 @@
             height: auto;
         }
         .images {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 10px;
+        }
+        #userImage {
+            grid-column: span 2;
         }
     </style>
 </head>
