@@ -82,10 +82,6 @@
 
         document.getElementById('photoForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-            const submitButton = document.getElementById('submitButton');
-            if (submitButton) {
-                submitButton.disabled = true; // Disable the submit button if it exists
-            }
 
             // Clear previous content
             document.getElementById('score').innerText = '';
@@ -127,9 +123,8 @@
                 console.error('Error:', error);
                 alert('An error occurred while processing your request.');
             } finally {
-                if (submitButton) {
-                    submitButton.disabled = false; // Re-enable the submit button if it exists
-                }
+               // Clear the file input
+                photoInput.value = '';
             }
         });
     </script>
