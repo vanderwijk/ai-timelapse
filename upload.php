@@ -93,16 +93,39 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 $data = [
 	'model' => 'gpt-4o-mini',
 	'messages' => [
-		['role' => 'system', 'content' => 'You are a helpful assistant, and you only reply with JSON.'],
-		['role' => 'user', 'content' => 'These three images are taken by people at a specific location using their mobile phone. The first two images are reference images. Your task is to screen the third image to make sure that it does not have any people in the foreground (so no selfies) and that the composition of the third image is the same as the reference images. Please answer with a score of likelihood from 0 to 100 and provide an explanation for your score. Return the response in JSON format with \'score\' and \'explanation\' as keys.'],
-		['role' => 'user', 'url' => 'https://cdn.natuurmonumententimelapse.nl/66f130dcc5b52.png', 'type' => 'image_url'],
-		['role' => 'user', 'url' => 'https://cdn.natuurmonumententimelapse.nl/611f7d3431f0e.png', 'type' => 'image_url'],
-		['role' => 'user', 'content' => 'data:image/png;base64,' . $userImageBase64, 'type' => 'image']
+		[
+			'role' => 'system',
+			'content' => 'You are a helpful assistant, and you only reply with JSON.'
+		],
+		[
+			'role' => 'user',
+			'content' => [
+				[
+					'type' => 'text',
+					'text' => 'These three images are taken by people at a specific location using their mobile phone. The first two images are reference images. Your task is to screen the third image to make sure that it does not have any people in the foreground (so no selfies) and that the composition of the third image is the same as the reference images. Please answer with a score of likelihood from 0 to 100 and provide an explanation for your score. Return the response in JSON format with \'score\' and \'explanation\' as keys.'
+				],
+				[
+					'type' => 'image_url',
+					'image_url' => [
+						'url' => 'https://cdn.natuurmonumententimelapse.nl/66f130dcc5b52.png'
+					]
+				],
+				[
+					'type' => 'image_url',
+					'image_url' => [
+						'url' => 'https://cdn.natuurmonumententimelapse.nl/611f7d3431f0e.png'
+					]
+				],
+				[
+					'type' => 'image_url',
+					'image_url' => [
+						'url' => "data:image/png;base64,{$userImageBase64}"
+					]
+				]
+			]
+		]
 	],
-	'response_format' => [
-		"type" => 'json_object',
-	],
-	'max_tokens' => 1000 // Adjust this value as needed to limit the output length
+	'max_tokens' => 1000
 ];
 
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
