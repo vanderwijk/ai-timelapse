@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Submission</title>
+    <style>
+        img {
+            width: 100%;
+            height: auto;
+        }
+        .images {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <h1>Submit a Photo</h1>
@@ -12,9 +23,9 @@
         <button type="submit" id="submitButton">Submit</button>
     </form>
 
-    <div id="score"></div>
+    <h2 id="score"></h2>
 
-    <div id="explanation"></div>
+    <p id="explanation"></p>
 
     <div class="images">
         <div id="userImage"></div>
