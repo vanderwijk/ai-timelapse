@@ -9,26 +9,36 @@
     <h1>Submit a Photo</h1>
     <form id="photoForm" enctype="multipart/form-data" action="upload.php" method="POST">
         <input type="file" accept="image/*" capture="environment" id="photoInput" name="photo" required>
-        <button type="submit">Submit</button>
+        <button type="submit" id="submitButton">Submit</button>
     </form>
 
     <script>
         document.getElementById('photoForm').addEventListener('submit', async function(event) {
             event.preventDefault();
+            const submitButton = document.getElementById('submitButton');
+            submitButton.disabled = true; // Disable the submit button
+
             const photoInput = document.getElementById('photoInput');
             const formData = new FormData();
             formData.append('photo', photoInput.files[0]);
 
-            const response = await fetch('upload.php', {
-                method: 'POST',
-                body: formData
-            });
+            try {
+                const response = await fetch('upload.php', {
+                    method: 'POST',
+                    body: formData
+                });
 
-            const result = await response.json();
-            const messageContent = result.choices[0].message.content;
-            const parsedContent = JSON.parse(messageContent);
+                const result = await response.json();
+                const messageContent = result.choices[0].message.content;
+                const parsedContent = JSON.parse(messageContent);
 
-            alert('Score: ' + parsedContent.score + '\nExplanation: ' + parsedContent.explanation);
+                alert('Score: ' + parsedContent.score + '\nExplanation: ' + parsedContent.explanation);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while processing your request.');
+            } finally {
+                submitButton.disabled = false; // Re-enable the submit button
+            }
         });
     </script>
 </body>
