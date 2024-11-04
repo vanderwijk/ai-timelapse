@@ -107,15 +107,15 @@ $data = [
 				[
 					'type' => 'image_url',
 					'image_url' => [
-						'url' => 'https://cdn.natuurmonumententimelapse.nl/66f130dcc5b52.png'
+						'url' => "data:image/png;base64,{$referenceImagesBase64[0]}"
 					]
 				],
 				[
-					'type' => 'image_url',
-					'image_url' => [
-						'url' => 'https://cdn.natuurmonumententimelapse.nl/611f7d3431f0e.png'
-					]
-				],
+						'type' => 'image_url',
+						'image_url' => [
+							'url' => "data:image/png;base64,{$referenceImagesBase64[1]}"
+						]
+					],
 				[
 					'type' => 'image_url',
 					'image_url' => [
