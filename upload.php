@@ -45,6 +45,7 @@ function resizeImage($file, $max_width, $max_height) {
 	}
 
 	// Resample the image
+	// TODO: make black and white to reduce size
 	$image_p = imagecreatetruecolor($width, $height);
 	switch ($image_type) {
 		case IMAGETYPE_JPEG:
@@ -77,6 +78,7 @@ $resizedUserImage = resizeImage($file['tmp_name'], 400, 400); // Adjust max widt
 $userImageBase64 = base64_encode(file_get_contents($resizedUserImage));
 
 // Paths to the reference images
+// TODO: make this dynamic based on the location
 $referenceImagePaths = [
 	'images/6714fd433c8e5.png',
 	'images/60ba23cb24a44.png'
@@ -163,4 +165,13 @@ $responseData['images'] = [
 
 // Encode the response back to JSON and echo it
 echo json_encode($responseData);
-?>
+
+// TODO: save the uploaded file if the score is above a certain threshold, use timestamp as filename use DigitalOcean Spaces
+
+// TODO: add the image to the database along with the location, score, explanation and timestamp
+
+// TODO: add a button to view all submissions
+
+// TODO: add approved images to video using ffmpeg
+
+// TODO: make a management tool to set the reference images
