@@ -140,5 +140,16 @@ if (curl_errno($ch)) {
 	exit;
 }
 
-echo $response;
+// Decode the response to add images
+$responseData = json_decode($response, true);
+$responseData['images'] = [
+	'user_image' => "data:image/png;base64,{$userImageBase64}",
+	'reference_images' => [
+		"data:image/png;base64,{$referenceImagesBase64[0]}",
+		"data:image/png;base64,{$referenceImagesBase64[1]}"
+	]
+];
+
+// Encode the response back to JSON and echo it
+echo json_encode($responseData);
 ?>
