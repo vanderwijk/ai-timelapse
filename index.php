@@ -33,6 +33,18 @@
                 const parsedContent = JSON.parse(messageContent);
 
                 alert('Score: ' + parsedContent.score + '\nExplanation: ' + parsedContent.explanation);
+
+                // Display user_image
+                const userImage = document.createElement('img');
+                userImage.src = result.images.user_image;
+                document.body.appendChild(userImage);
+
+                // Display reference_images
+                result.images.reference_images.forEach(imageData => {
+                    const referenceImage = document.createElement('img');
+                    referenceImage.src = imageData;
+                    document.body.appendChild(referenceImage);
+                });
             } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred while processing your request.');
