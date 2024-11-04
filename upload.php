@@ -29,8 +29,8 @@ function resizeImage($file, $max_width, $max_height) {
 		} else {
 			$max_height = $max_width / $ratio;
 		}
-		$width = $max_width;
-		$height = $max_height;
+		$width = intval($max_width);
+		$height = intval($max_height);
 	}
 
 	// Resample the image
