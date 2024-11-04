@@ -12,6 +12,15 @@
         <button type="submit" id="submitButton">Submit</button>
     </form>
 
+    <div id="score"></div>
+
+    <div id="explanation"></div>
+
+    <div class="images">
+        <div id="userImage"></div>
+        <div id="referenceImages"></div>
+    </div>
+
     <script>
         document.getElementById('photoForm').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -32,18 +41,20 @@
                 const messageContent = result.choices[0].message.content;
                 const parsedContent = JSON.parse(messageContent);
 
-                alert('Score: ' + parsedContent.score + '\nExplanation: ' + parsedContent.explanation);
+                // Display score and explanation
+                document.getElementById('score').innerText = 'Score: ' + parsedContent.score;
+                document.getElementById('explanation').innerText = 'Explanation: ' + parsedContent.explanation;
 
                 // Display user_image
                 const userImage = document.createElement('img');
                 userImage.src = result.images.user_image;
-                document.body.appendChild(userImage);
+                document.getElementById('userImage').appendChild(userImage);
 
                 // Display reference_images
                 result.images.reference_images.forEach(imageData => {
                     const referenceImage = document.createElement('img');
                     referenceImage.src = imageData;
-                    document.body.appendChild(referenceImage);
+                    document.getElementById('referenceImages').appendChild(referenceImage);
                 });
             } catch (error) {
                 console.error('Error:', error);
