@@ -15,6 +15,37 @@ if ($file['error'] !== UPLOAD_ERR_OK) {
 	exit;
 }
 
+// Check if the file was uploaded without errors
+if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
+    $fileTmpPath = $_FILES['photo']['tmp_name'];
+    $fileName = $_FILES['photo']['name'];
+    $fileSize = $_FILES['photo']['size'];
+    $fileType = $_FILES['photo']['type'];
+    $fileNameCmps = explode(".", $fileName);
+    $fileExtension = strtolower(end($fileNameCmps));
+
+    // Sanitize file name
+    $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+
+    // Check if the file type is allowed
+    $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg');
+    if (in_array($fileExtension, $allowedfileExtensions)) {
+        // Directory in which the uploaded file will be moved
+        $uploadFileDir = './uploaded_files/';
+        $dest_path = $uploadFileDir . $newFileName;
+
+        if (move_uploaded_file($fileTmpPath, $dest_path)) {
+            echo 'File is successfully uploaded.';
+        } else {
+            echo 'There was some error moving the file to upload directory. Please make sure the upload directory is writable by web server.';
+        }
+    } else {
+        echo 'Upload failed. Allowed file types: ' . implode(',', $allowedfileExtensions);
+    }
+} else {
+    echo 'There was some error uploading the file. Error code: ' . $_FILES['photo']['error'];
+}
+
 // Function to resize image
 function resizeImage($file, $max_width, $max_height) {
 	list($orig_width, $orig_height, $image_type) = getimagesize($file);
