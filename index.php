@@ -36,18 +36,6 @@
         input[type="file"] {
             margin-bottom: 10px;
         }
-        button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:disabled {
-            background-color: #ccc;
-        }
         h2, p {
             color: #333;
         }
@@ -74,7 +62,6 @@
         <h1>Submit a Photo</h1>
         <form id="photoForm" enctype="multipart/form-data" action="upload.php" method="POST">
             <input type="file" accept="image/*" capture="environment" id="photoInput" name="photo" required>
-            <button type="submit" id="submitButton">Submit</button>
         </form>
 
         <h2 id="score"></h2>
@@ -89,10 +76,16 @@
     </div>
 
     <script>
+        document.getElementById('photoInput').addEventListener('change', function() {
+            document.getElementById('photoForm').submit();
+        });
+
         document.getElementById('photoForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const submitButton = document.getElementById('submitButton');
-            submitButton.disabled = true; // Disable the submit button
+            if (submitButton) {
+                submitButton.disabled = true; // Disable the submit button if it exists
+            }
 
             // Clear previous content
             document.getElementById('score').innerText = '';
@@ -134,7 +127,9 @@
                 console.error('Error:', error);
                 alert('An error occurred while processing your request.');
             } finally {
-                submitButton.disabled = false; // Re-enable the submit button
+                if (submitButton) {
+                    submitButton.disabled = false; // Re-enable the submit button if it exists
+                }
             }
         });
     </script>
