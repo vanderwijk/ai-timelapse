@@ -8,43 +8,6 @@ if (!isset($_FILES['photo'])) {
 	exit;
 }
 
-// Check if the file was uploaded without errors
-if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
-    $fileTmpPath = $_FILES['photo']['tmp_name'];
-    $fileName = $_FILES['photo']['name'];
-    $fileSize = $_FILES['photo']['size'];
-    $fileType = $_FILES['photo']['type'];
-    $fileNameCmps = explode(".", $fileName);
-    $fileExtension = strtolower(end($fileNameCmps));
-
-    // Sanitize file name
-    $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
-
-    // Check if the file type is allowed
-    $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg');
-    if (in_array($fileExtension, $allowedfileExtensions)) {
-        // Directory in which the uploaded file will be moved
-        $uploadFileDir = sys_get_temp_dir() . '/';
-        
-        // Ensure the directory exists
-        if (!is_dir($uploadFileDir)) {
-            mkdir($uploadFileDir, 0755, true);
-        }
-
-        $dest_path = $uploadFileDir . $newFileName;
-
-        if (move_uploaded_file($fileTmpPath, $dest_path)) {
-            echo 'File is successfully uploaded.';
-        } else {
-            echo 'There was some error moving the file to upload directory. Please make sure the upload directory is writable by web server.';
-        }
-    } else {
-        echo 'Upload failed. Allowed file types: ' . implode(',', $allowedfileExtensions);
-    }
-} else {
-    echo 'There was some error uploading the file. Error code: ' . $_FILES['photo']['error'];
-}
-
 $file = $_FILES['photo'];
 if ($file['error'] !== UPLOAD_ERR_OK) {
 	echo json_encode(['error' => 'No selected file']);
@@ -79,9 +42,6 @@ function resizeImage($file, $max_width, $max_height) {
 		case IMAGETYPE_PNG:
 			$image = imagecreatefrompng($file);
 			break;
-		case IMAGETYPE_GIF:
-			$image = imagecreatefromgif($file);
-			break;
 		default:
 			throw new Exception('Unsupported image type');
 	}
@@ -95,9 +55,6 @@ function resizeImage($file, $max_width, $max_height) {
 			break;
 		case IMAGETYPE_PNG:
 			imagepng($image_p, $temp_file);
-			break;
-		case IMAGETYPE_GIF:
-			imagegif($image_p, $temp_file);
 			break;
 	}
 
@@ -154,11 +111,11 @@ $data = [
 					]
 				],
 				[
-						'type' => 'image_url',
-						'image_url' => [
-							'url' => "data:image/png;base64,{$referenceImagesBase64[1]}"
-						]
-					],
+					'type' => 'image_url',
+					'image_url' => [
+						'url' => "data:image/png;base64,{$referenceImagesBase64[1]}"
+					]
+				],
 				[
 					'type' => 'image_url',
 					'image_url' => [
