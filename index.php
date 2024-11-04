@@ -60,7 +60,7 @@
 <body>
     <div class="container">
         <h1>Submit a Photo</h1>
-        <form id="photoForm" enctype="multipart/form-data" action="upload.php" method="POST">
+        <form id="photoForm" enctype="multipart/form-data">
             <input type="file" accept="image/*" capture="environment" id="photoInput" name="photo" required>
         </form>
 
@@ -77,7 +77,7 @@
 
     <script>
         document.getElementById('photoInput').addEventListener('change', function() {
-            document.getElementById('photoForm').submit();
+            document.getElementById('photoForm').dispatchEvent(new Event('submit'));
         });
 
         document.getElementById('photoForm').addEventListener('submit', async function(event) {
@@ -122,9 +122,6 @@
             } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred while processing your request.');
-            } finally {
-               // Clear the file input
-                photoInput.value = '';
             }
         });
     </script>
