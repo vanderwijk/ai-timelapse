@@ -125,6 +125,9 @@ $data = [
 			]
 		]
 	],
+	'response_format' => [
+		"type" => 'json_object',
+	],
 	'max_tokens' => 1000
 ];
 
