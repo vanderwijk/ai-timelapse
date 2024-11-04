@@ -62,7 +62,7 @@ function resizeImage($file, $max_width, $max_height) {
 }
 
 // Resize user image
-$resizedUserImage = resizeImage($file['tmp_name'], 200, 200); // Adjust max width and height as needed
+$resizedUserImage = resizeImage($file['tmp_name'], 400, 400); // Adjust max width and height as needed
 $userImageBase64 = base64_encode(file_get_contents($resizedUserImage));
 
 // Paths to the reference images
@@ -74,7 +74,7 @@ $referenceImagePaths = [
 // Convert reference images to base64
 $referenceImagesBase64 = [];
 foreach ($referenceImagePaths as $path) {
-	$resizedReferenceImage = resizeImage($path, 200, 200); // Adjust max width and height as needed
+	$resizedReferenceImage = resizeImage($path, 400, 400); // Adjust max width and height as needed
 	$referenceImagesBase64[] = base64_encode(file_get_contents($resizedReferenceImage));
 }
 
