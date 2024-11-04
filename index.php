@@ -16,8 +16,15 @@
             justify-content: center;
             min-height: 100vh;
         }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
         h1 {
             color: #333;
+            text-align: center;
         }
         form {
             background: #fff;
@@ -49,8 +56,7 @@
             grid-template-columns: 1fr 1fr;
             grid-template-rows: auto auto;
             gap: 10px;
-            width: 80%;
-            max-width: 800px;
+            width: 100%;
         }
         #userImage {
             grid-column: span 2;
@@ -64,20 +70,22 @@
     </style>
 </head>
 <body>
-    <h1>Submit a Photo</h1>
-    <form id="photoForm" enctype="multipart/form-data" action="upload.php" method="POST">
-        <input type="file" accept="image/*" capture="environment" id="photoInput" name="photo" required>
-        <button type="submit" id="submitButton">Submit</button>
-    </form>
+    <div class="container">
+        <h1>Submit a Photo</h1>
+        <form id="photoForm" enctype="multipart/form-data" action="upload.php" method="POST">
+            <input type="file" accept="image/*" capture="environment" id="photoInput" name="photo" required>
+            <button type="submit" id="submitButton">Submit</button>
+        </form>
 
-    <h2 id="score"></h2>
+        <h2 id="score"></h2>
 
-    <p id="explanation"></p>
+        <p id="explanation"></p>
 
-    <div class="images">
-        <div id="userImage"></div>
-        <div id="referenceImage1"></div>
-        <div id="referenceImage2"></div>
+        <div class="images">
+            <div id="userImage"></div>
+            <div id="referenceImage1"></div>
+            <div id="referenceImage2"></div>
+        </div>
     </div>
 
     <script>
