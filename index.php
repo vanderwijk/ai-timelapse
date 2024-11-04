@@ -52,6 +52,24 @@
         button svg {
             margin-right: 10px;
         }
+        .spinner {
+            display: none;
+            margin-left: 10px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #007bff;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
         h2, p {
             color: #333;
         }
@@ -85,6 +103,7 @@
                 </svg>
                 Take Photo
             </button>
+            <div class="spinner" id="loadingSpinner"></div>
         </form>
 
         <h2 id="score"></h2>
@@ -109,6 +128,9 @@
 
         document.getElementById('photoForm').addEventListener('submit', async function(event) {
             event.preventDefault();
+
+            // Show the loading spinner
+            document.getElementById('loadingSpinner').style.display = 'inline-block';
 
             // Clear previous content
             document.getElementById('score').innerText = '';
@@ -149,6 +171,9 @@
             } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred while processing your request.');
+            } finally {
+                // Hide the loading spinner
+                document.getElementById('loadingSpinner').style.display = 'none';
             }
         });
     </script>
