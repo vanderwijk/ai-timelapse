@@ -5,18 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Submission</title>
     <style>
-        img {
-            width: 100%;
-            height: auto;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        h2, p {
+            color: #333;
         }
         .images {
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: auto auto;
             gap: 10px;
+            width: 80%;
+            max-width: 800px;
         }
         #userImage {
             grid-column: span 2;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -42,6 +85,13 @@
             event.preventDefault();
             const submitButton = document.getElementById('submitButton');
             submitButton.disabled = true; // Disable the submit button
+
+            // Clear previous content
+            document.getElementById('score').innerText = '';
+            document.getElementById('explanation').innerText = '';
+            document.getElementById('userImage').innerHTML = '';
+            document.getElementById('referenceImage1').innerHTML = '';
+            document.getElementById('referenceImage2').innerHTML = '';
 
             const photoInput = document.getElementById('photoInput');
             const formData = new FormData();
