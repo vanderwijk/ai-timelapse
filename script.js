@@ -3,7 +3,9 @@ document.getElementById('takePhotoButton').addEventListener('click', function() 
 });
 
 document.getElementById('photoInput').addEventListener('change', function() {
-	document.getElementById('photoForm').dispatchEvent(new Event('submit'));
+	if (this.files && this.files.length > 0) {
+		document.getElementById('photoForm').dispatchEvent(new Event('submit'));
+	}
 });
 
 document.getElementById('photoForm').addEventListener('submit', async function(event) {
