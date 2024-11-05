@@ -6,6 +6,20 @@ namespace Composer\Autoload;
 
 class ComposerStaticInitdf457f6088e865ee4c2005a5b0dcf4a9
 {
+    public static $prefixLengthsPsr4 = array (
+        'M' => 
+        array (
+            'Medoo\\' => 6,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'Medoo\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/catfan/medoo/src',
+        ),
+    );
+
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
@@ -13,6 +27,8 @@ class ComposerStaticInitdf457f6088e865ee4c2005a5b0dcf4a9
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInitdf457f6088e865ee4c2005a5b0dcf4a9::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitdf457f6088e865ee4c2005a5b0dcf4a9::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInitdf457f6088e865ee4c2005a5b0dcf4a9::$classMap;
 
         }, null, ClassLoader::class);
