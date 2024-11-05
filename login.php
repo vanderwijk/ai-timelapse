@@ -1,9 +1,7 @@
 <?php
 session_start();
 
-// Use Medoo to connect to the database
-require 'vendor/autoload.php';
-use Medoo\Medoo;
+require 'database.php';
 
 // Function to verify login
 function verifyLogin($username, $password) {
